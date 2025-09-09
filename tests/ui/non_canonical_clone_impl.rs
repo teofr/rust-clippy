@@ -130,3 +130,30 @@ with_span!(
         }
     }
 );
+
+// Issue #15577
+struct Weird<'a>(&'a i32);
+
+impl Clone for Weird<'_> {
+    fn clone(&self) -> Self {
+        println!("clone() called");
+        Weird(self.0)
+    }
+}
+
+impl Copy for Weird<'static> {}
+
+// struct Weird<B>(B);
+
+// impl<B> Clone for Weird<B>
+// where
+//     B: Clone,
+//     B: Copy,
+// {
+//     fn clone(&self) -> Self {
+//         println!("clone() called");
+//         Weird(self.0.clone())
+//     }
+// }
+
+// impl Copy for Weird<i32> {}

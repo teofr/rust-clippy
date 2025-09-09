@@ -6,7 +6,8 @@
     clippy::unnecessary_operation,
     clippy::vec_init_then_push,
     clippy::toplevel_ref_arg,
-    clippy::needless_borrow
+    clippy::needless_borrow,
+    clippy::non_canonical_clone_impl
 )]
 
 use std::cell::RefCell;
@@ -84,4 +85,23 @@ fn clone_on_copy() -> Option<(i32)> {
     //
     //~^^ clone_on_copy
     None
+}
+
+// Issue #15577
+struct Weird<'a>(&'a i32);
+
+impl Clone for Weird<'_> {
+    fn clone(&self) -> Self {
+        println!("clone() called");
+        Weird(self.0)
+    }
+}
+
+impl Copy for Weird<'static> {}
+
+impl Weird<'_> {
+    fn foo(&self) -> Self {
+        self.clone()
+        //~^ clone_on_copy
+    }
 }

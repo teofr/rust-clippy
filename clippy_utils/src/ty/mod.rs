@@ -266,7 +266,7 @@ pub fn implements_trait_with_env<'tcx>(
     implements_trait_with_env_from_iter(tcx, typing_env, ty, trait_id, callee_id, args.iter().map(|&x| Some(x)))
 }
 
-/// Same as `implements_trait_from_env` but takes the arguments as an iterator.
+/// Same as `implements_trait_with_env` but takes the arguments as an iterator.
 pub fn implements_trait_with_env_from_iter<'tcx>(
     tcx: TyCtxt<'tcx>,
     typing_env: ty::TypingEnv<'tcx>,
@@ -286,6 +286,11 @@ pub fn implements_trait_with_env_from_iter<'tcx>(
     }
 
     let ty = tcx.erase_regions(ty);
+    // dbg!(ty);
+    // dbg!(typing_env);
+    if let ty::Adt(_, a) = ty.kind() {
+        // dbg!(a);
+    }
     if ty.has_escaping_bound_vars() {
         return false;
     }
@@ -296,25 +301,32 @@ pub fn implements_trait_with_env_from_iter<'tcx>(
         .map(|arg| arg.into().unwrap_or_else(|| infcx.next_ty_var(DUMMY_SP).into()))
         .collect::<Vec<_>>();
 
+    // dbg!(&args);
     let trait_ref = TraitRef::new(tcx, trait_id, [GenericArg::from(ty)].into_iter().chain(args));
+    // dbg!(trait_ref.args);
 
     debug_assert_matches!(
         tcx.def_kind(trait_id),
         DefKind::Trait | DefKind::TraitAlias,
         "`DefId` must belong to a trait or trait alias"
     );
+
+    dbg!(infcx.inner.borrow_mut().unwrap_region_constraints().data());
+
     #[cfg(debug_assertions)]
     assert_generic_args_match(tcx, trait_id, trait_ref.args);
-
+    // dbg!(param_env);
     let obligation = Obligation {
         cause: ObligationCause::dummy(),
         param_env,
         recursion_depth: 0,
         predicate: trait_ref.upcast(tcx),
     };
-    infcx
-        .evaluate_obligation(&obligation)
-        .is_ok_and(EvaluationResult::must_apply_modulo_regions)
+    dbg!(&obligation);
+    let a = infcx.evaluate_obligation(&obligation);
+    dbg!(a);
+
+    a.is_ok_and(EvaluationResult::must_apply_modulo_regions)
 }
 
 /// Checks whether this type implements `Drop`.
@@ -975,7 +987,9 @@ pub fn approx_ty_size<'tcx>(cx: &LateContext<'tcx>, ty: Ty<'tcx>) -> u64 {
 #[allow(dead_code)]
 fn assert_generic_args_match<'tcx>(tcx: TyCtxt<'tcx>, did: DefId, args: &[GenericArg<'tcx>]) {
     let g = tcx.generics_of(did);
+    // dbg!(g);
     let parent = g.parent.map(|did| tcx.generics_of(did));
+    // dbg!(parent);
     let count = g.parent_count + g.own_params.len();
     let params = parent
         .map_or([].as_slice(), |p| p.own_params.as_slice())
