@@ -1843,7 +1843,12 @@ pub fn is_must_use_func_call(cx: &LateContext<'_>, expr: &Expr<'_>) -> bool {
 /// * `|x| { let y = x; ...; let z = y; z }`
 /// * `|x| { let y = x; ...; let z = y; return z }`
 ///
-/// Consider calling [`is_expr_untyped_identity_function`] or [`is_expr_identity_function`] instead.
+/// Works on both closure bodies and regular function bodies (both use [`Body`]).
+///
+/// When checking whether a *closure expression* is identity, prefer
+/// [`is_expr_untyped_identity_function`] or [`is_expr_identity_function`], which
+/// additionally handle `std::convert::identity` paths and type-annotation checks.
+/// Use this function directly when inspecting `fn` item or method bodies.
 pub fn is_body_identity_function<'hir>(cx: &LateContext<'_>, func: &Body<'hir>) -> bool {
     let [param] = func.params else {
         return false;

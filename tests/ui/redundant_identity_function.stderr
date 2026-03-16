@@ -1,5 +1,5 @@
 error: this function is equivalent to `std::convert::identity`
-  --> tests/ui/redundant_identity_function.rs:8:1
+  --> tests/ui/redundant_identity_function.rs:18:1
    |
 LL | / fn simple_id<T>(x: T) -> T {
 LL | |
@@ -12,7 +12,7 @@ LL | | }
    = help: to override `-D warnings` add `#[allow(clippy::redundant_identity_function)]`
 
 error: this function is equivalent to `std::convert::identity`
-  --> tests/ui/redundant_identity_function.rs:13:1
+  --> tests/ui/redundant_identity_function.rs:23:1
    |
 LL | / fn concrete_id(x: u32) -> u32 {
 LL | |
@@ -23,7 +23,7 @@ LL | | }
    = help: consider using `std::convert::identity` instead
 
 error: this function is equivalent to `std::convert::identity`
-  --> tests/ui/redundant_identity_function.rs:18:1
+  --> tests/ui/redundant_identity_function.rs:28:1
    |
 LL | / fn with_return<T>(x: T) -> T {
 LL | |
@@ -34,7 +34,7 @@ LL | | }
    = help: consider using `std::convert::identity` instead
 
 error: this function is equivalent to `std::convert::identity`
-  --> tests/ui/redundant_identity_function.rs:23:1
+  --> tests/ui/redundant_identity_function.rs:33:1
    |
 LL | / fn with_block<T>(x: T) -> T {
 LL | |
@@ -45,7 +45,7 @@ LL | | }
    = help: consider using `std::convert::identity` instead
 
 error: this function is equivalent to `std::convert::identity`
-  --> tests/ui/redundant_identity_function.rs:28:1
+  --> tests/ui/redundant_identity_function.rs:38:1
    |
 LL | / fn with_block_and_return<T>(x: T) -> T {
 LL | |
@@ -58,7 +58,7 @@ LL | | }
    = help: consider using `std::convert::identity` instead
 
 error: this function is equivalent to `std::convert::identity`
-  --> tests/ui/redundant_identity_function.rs:35:1
+  --> tests/ui/redundant_identity_function.rs:45:1
    |
 LL | / fn with_let_chain<T>(x: T) -> T {
 LL | |
@@ -70,7 +70,7 @@ LL | | }
    = help: consider using `std::convert::identity` instead
 
 error: this function is equivalent to `std::convert::identity`
-  --> tests/ui/redundant_identity_function.rs:41:1
+  --> tests/ui/redundant_identity_function.rs:51:1
    |
 LL | / fn with_let_and_return<T>(x: T) -> T {
 LL | |
@@ -82,7 +82,7 @@ LL | | }
    = help: consider using `std::convert::identity` instead
 
 error: this function is equivalent to `std::convert::identity`
-  --> tests/ui/redundant_identity_function.rs:47:1
+  --> tests/ui/redundant_identity_function.rs:57:1
    |
 LL | / fn with_multi_let<T>(x: T) -> T {
 LL | |
@@ -95,7 +95,7 @@ LL | | }
    = help: consider using `std::convert::identity` instead
 
 error: this function is equivalent to `std::convert::identity`
-  --> tests/ui/redundant_identity_function.rs:54:1
+  --> tests/ui/redundant_identity_function.rs:64:1
    |
 LL | / fn string_id(s: String) -> String {
 LL | |
@@ -105,5 +105,60 @@ LL | | }
    |
    = help: consider using `std::convert::identity` instead
 
-error: aborting due to 9 previous errors
+error: this function is equivalent to `std::convert::identity`
+  --> tests/ui/redundant_identity_function.rs:69:1
+   |
+LL | / fn ref_id(x: &u32) -> &u32 {
+LL | |
+LL | |     x
+LL | | }
+   | |_^
+   |
+   = help: consider using `std::convert::identity` instead
+
+error: this function is equivalent to `std::convert::identity`
+  --> tests/ui/redundant_identity_function.rs:74:1
+   |
+LL | / fn lifetime_id<'a>(x: &'a str) -> &'a str {
+LL | |
+LL | |     x
+LL | | }
+   | |_^
+   |
+   = help: consider using `std::convert::identity` instead
+
+error: this function is equivalent to `std::convert::identity`
+  --> tests/ui/redundant_identity_function.rs:79:1
+   |
+LL | / const fn const_id(x: u32) -> u32 {
+LL | |
+LL | |     x
+LL | | }
+   | |_^
+   |
+   = help: consider using `std::convert::identity` instead
+
+error: this function is equivalent to `std::convert::identity`
+  --> tests/ui/redundant_identity_function.rs:88:5
+   |
+LL | /     fn inherent_id(x: u32) -> u32 {
+LL | |
+LL | |         x
+LL | |     }
+   | |_____^
+   |
+   = help: consider using `std::convert::identity` instead
+
+error: this function is equivalent to `std::convert::identity`
+  --> tests/ui/redundant_identity_function.rs:243:1
+   |
+LL | / fn inlined_id(x: u32) -> u32 {
+LL | |
+LL | |     x
+LL | | }
+   | |_^
+   |
+   = help: consider using `std::convert::identity` instead
+
+error: aborting due to 14 previous errors
 
