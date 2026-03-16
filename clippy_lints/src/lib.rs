@@ -307,6 +307,7 @@ mod redundant_clone;
 mod redundant_closure_call;
 mod redundant_else;
 mod redundant_field_names;
+mod redundant_identity_function;
 mod redundant_locals;
 mod redundant_pub_crate;
 mod redundant_slicing;
@@ -667,6 +668,7 @@ pub fn register_lint_passes(store: &mut rustc_lint::LintStore, conf: &'static Co
             Box::new(move |_| Box::new(format_impl::FormatImpl::new(format_args.clone())))
         },
         Box::new(|_| Box::new(redundant_closure_call::RedundantClosureCall)),
+        Box::new(|_| Box::new(redundant_identity_function::RedundantIdentityFunction)),
         Box::new(|_| Box::new(unused_unit::UnusedUnit)),
         Box::new(|_| Box::new(returns::Return)),
         Box::new(move |_| Box::new(collapsible_if::CollapsibleIf::new(conf))),
